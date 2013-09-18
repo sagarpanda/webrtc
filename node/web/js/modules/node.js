@@ -8,13 +8,14 @@ app.modules.node = (function(){
 			socket.emit('adduser', prompt("What's your name?"));
 	    });
 
-	    socket.on('task', handler);
+	    socket.on('task', taskHandler);
+	    socket.on('rtc', rtcHandler);
 	};
 	var init = function(servUrl){console.log(servUrl);
 		socket = io.connect(servUrl);
 		addListener();
 	};
-	var handler = function(action, data){
+	var taskHandler = function(action, data){
 		switch(action){
 
 			case 'initInfo':
@@ -33,6 +34,18 @@ app.modules.node = (function(){
 				break;
 		};
 	};
+	var rtcHandler = function(action, data){
+		switch(action){
+
+			case 'offerInfo':
+				console.log('offerInfo');
+				break;
+
+			case 'answerInfo':
+				console.log('answerInfo')
+				break;
+		};
+	};
 	var sendTo = function(userid, data){
 		data.from = myInfo.userid;
 		socket.emit('task', 'sendto', {"to":userid, "data": data});
@@ -41,11 +54,15 @@ app.modules.node = (function(){
 		data.from = myInfo.userid;
 		socket.emit('task', 'sendtoall', data);
 	};
+	var sendRtcData = function(userid, infoType, data){//infoType: offerInfo/answerInfo
+		socket.emit('rtc', infoType, {"to":userid, "data": data});
+	};
 
 	return {
 		init: init,
 		sendTo: sendTo,
-		send: sendToAll
+		send: sendToAll,
+		sendRtcData: sendRtcData
 	};
 
 })();

@@ -38,6 +38,19 @@ io.sockets.on('connection', function (socket) {
 		};
 	});
 	
+	socket.on('rtc', function (action, data) {
+		switch(action){
+			case 'offerInfo':
+				data.from = socket.userid;
+				socket.emit('rtc', 'offerInfo', data);
+				break;
+			case 'answerInfo':
+				data.from = socket.userid;
+				socket.emit('rtc', 'answerInfo', data);
+				break;
+		};
+	});
+	
 	socket.on('disconnect', function(){
 		var name = usernames[socket.userid].name;
 		delete usernames[socket.userid];
