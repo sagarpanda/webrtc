@@ -21,10 +21,11 @@ io.sockets.on('connection', function (socket) {
 		count++;
 		socket.userid = "user_"+count;
 		socket.room = 'room1';
-		usernames[socket.userid] = {"users":socket.userid, "name":username, "rtc":null};
+		usernames[socket.userid] = {"socket_id":socket.id, "users":socket.userid, "name":username, "rtc":null};
 		socket.join('room1');
 		//socket.emit('updatechat', 'SERVER', 'you have connected to room1');
 		socket.emit('task', 'initInfo', {"users":usernames, "myInfo":usernames[socket.userid]});
+		socket.broadcast.to('room1').emit('task', 'adduser', usernames[socket.userid]);
 		socket.broadcast.to('room1').emit('task', 'onboard', {"msg":username + " has connected to this board."});
 	});
 	
@@ -38,24 +39,32 @@ io.sockets.on('connection', function (socket) {
 		};
 	});
 	
-	socket.on('rtc', function (action, data) {
+	/*socket.on('rtc', function (action, data) {
+		console.log("-----rtc----- "+socket.userid+" ---- "+action+" ---- "+data.to);
 		switch(action){
-			case 'offerInfo':
+			case 'remoteinfo':
 				data.from = socket.userid;
-				socket.emit('rtc', 'offerInfo', data);
+				io.sockets.socket(usernames[data.to].socket_id).emit('rtc', 'remoteinfo', data);
 				break;
-			case 'answerInfo':
+			case 'icecandidate':
 				data.from = socket.userid;
-				socket.emit('rtc', 'answerInfo', data);
+				io.sockets.socket(usernames[data.to].socket_id).emit('rtc', 'icecandidate', data);
 				break;
 		};
+	});*/
+
+	socket.on('rtcmsg', function (data) {
+			data.from = socket.userid;
+			io.sockets.socket(usernames[data.to].socket_id).emit('rtcmsg', data);
 	});
 	
 	socket.on('disconnect', function(){
 		var name = usernames[socket.userid].name;
+		var data = usernames[socket.userid];
 		delete usernames[socket.userid];
 		//io.sockets.emit('updateusers', usernames);
-		socket.broadcast.emit('task', 'onboard', name + ' has disconnected.');
+		socket.broadcast.to('room1').emit('task', 'deluser', data);
+		socket.broadcast.to('room1').emit('task', 'onboard', {"msg":name + ' has disconnected.'});
 		socket.leave(socket.room);
 	});
 });

@@ -5,14 +5,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="main"></div>
+<body onload="app.init()">
+  <div class="main" style="width:600px;height500px;">
+    <ul class="live_users" style="width:200px;float:left;margin:0;border:1px solid #fcc;height:500px;"> </ul>
+    <div class="onboard_msg_box" style="width:350px;float:left;height:500px;position:relative;border:1px solid #fcc;"></div>
+    <div class="curr_user" style="width:200px;height: 20px;float:left;"></div>
+    <input id="user_text" name="user_text_name" style="width:390px;"  placeholder="text goes here" value="" onkeydown="app.keyPress()" />
+  </div>
   <script src="js/libs/zepto.min.js"></script>
   <script src="http://localhost:5337/socket.io/socket.io.js"></script>
   <script src="js/app.js"></script>
   <script src="js/modules/node.js"></script>
   <script src="js/modules/p2p.js"></script>
   <script src="js/views/userlist.js"></script>
+  <script src="js/views/onboardmsg.js"></script>
 </body>
 </html>
 

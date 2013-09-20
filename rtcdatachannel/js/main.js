@@ -46,6 +46,7 @@ function createConnection() {
   pc2.ondatachannel = receiveChannelCallback;
 
   pc1.createOffer(gotDescription1);
+  trace('after pc1 createOffer');
   startButton.disabled = true;
   closeButton.disabled = false;
 }
@@ -78,15 +79,20 @@ function closeDataChannels() {
 
 function gotDescription1(desc) {
   pc1.setLocalDescription(desc);
-  trace('Offer from pc1 \n' + desc.sdp);
+  //trace('Offer from pc1 \n' + desc.sdp);
+  trace('Offer from pc1');
   pc2.setRemoteDescription(desc);
+  trace('after pc2 setRemoteDescription');
   pc2.createAnswer(gotDescription2);
+  trace('after pc2 createAnswer');
 }
 
 function gotDescription2(desc) {
   pc2.setLocalDescription(desc);
-  trace('Answer from pc2 \n' + desc.sdp);
+  //trace('Answer from pc2 \n' + desc.sdp);
+  trace('Answer from pc2');
   pc1.setRemoteDescription(desc);
+  trace('after pc1 setRemoteDescription');
 }
 
 function iceCallback1(event) {

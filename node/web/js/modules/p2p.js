@@ -2,12 +2,15 @@ app.modules.p2p = (function(){
 
 	performance.now = performance.now || performance.webkitNow;
 
-
+	var pc1 = null;
 	var sendChannel, receiveChannel;
 	//startButton.disabled = false;
 	//sendButton.disabled = true;
 	//closeButton.disabled = true;
 	var sendto_userid = null;
+	var isCaller = null;
+	var remoteData = null;
+	var jsonData = {};
 
 	function trace(text) {
 	  // This function is used for logging.
@@ -17,10 +20,13 @@ app.modules.p2p = (function(){
 	  console.log((performance.now() / 1000).toFixed(3) + ": " + text);
 	};
 
-	function createConnection(userid, isOffer) {
+	function createConnection(userid, caller) {
 		sendto_userid = userid;
+		isCaller = caller;
+		jsonData.to = sendto_userid;
+		jsonData.isCaller = caller;
 		var servers = null;
-		window.pc1 = new webkitRTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
+		pc1 = new webkitRTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
 		trace('Created local peer connection object pc1');
 
 		try {
@@ -37,25 +43,26 @@ app.modules.p2p = (function(){
 		sendChannel.onopen = onSendChannelStateChange;
 		sendChannel.onclose = onSendChannelStateChange;
 
+		pc1.ondatachannel = receiveChannelCallback;
+
 		//window.pc2 = new webkitRTCPeerConnection(servers, {optional: [{RtpDataChannels: true}]});
 		//trace('Created remote peer connection object pc2');
 
 		//pc2.onicecandidate = iceCallback2;
 		//pc2.ondatachannel = receiveChannelCallback;
-		if (isOffer) {
+		if (isCaller) {
 			pc1.createOffer(gotDescription1);
 		}else{
-			pc1.onicecandidate = iceCallback2;
-			pc1.ondatachannel = receiveChannelCallback;
+			pc1.createAnswer(gotDescription1);
 		};
 		//startButton.disabled = true;
 		//closeButton.disabled = false;
 	};
 
-	function sendData() {
-	  var data = document.getElementById("dataChannelSend").value;
-	  sendChannel.send(data);
-	  trace('Sent Data: ' + data);
+	function sendData(msg) {
+	  //var data = document.getElementById("dataChannelSend").value;
+	  sendChannel.send(msg);
+	  trace('Sent Data: ' + msg);
 	};
 
 	function closeDataChannels() {
@@ -80,10 +87,47 @@ app.modules.p2p = (function(){
 
 	function gotDescription1(desc) {
 	  pc1.setLocalDescription(desc);
-	  trace('Offer from pc1 \n' + desc.sdp);
+	  //trace('Offer from pc1 \n' + desc.sdp);
+	  trace('Offer from pc1');
 	  //pc2.setRemoteDescription(desc);
 	  //pc2.createAnswer(gotDescription2);
-	  app.modules.node.sendRtcData(sendto_userid, 'offerInfo', desc);
+	  jsonData.desc = desc;
+	  app.modules.node.sendRtcData(sendto_userid, jsonData);
+	  //if (!isCaller) {
+	  	//pc1.setRemoteDescription(remoteData.desc);
+	  	//setRemoteData(data);
+	  //};
+	  
+	};
+
+	function setRemoteData(data){
+		console.log("p2p.js: setRemoteData - from: "+data.from);
+		if (!pc1) {
+			remoteData = data;
+			createConnection(data.from, false);
+		};
+
+		if(data.desc){
+			pc1.setRemoteDescription(data.desc);
+		};
+	};
+
+	function addCandidate1(data){
+		pc1.addIceCandidate(data.ice);
+	};
+
+	function setRtcMsg(data){
+		if (!pc1) {
+			createConnection(data.from, false);
+		}
+
+		if (data.desc) {
+			//pc1.setRemoteDescription(data.desc);
+			pc1.setRemoteDescription(new RTCSessionDescription(data.desc));
+		}else{
+			//pc1.addIceCandidate(data.ice);
+			pc1.addIceCandidate(new RTCIceCandidate(data.ice));
+		};
 	};
 
 	function gotDescription2(desc) {
@@ -95,7 +139,10 @@ app.modules.p2p = (function(){
 	function iceCallback1(event) {
 	  trace('local ice callback');
 	  if (event.candidate) {
-	    pc2.addIceCandidate(event.candidate);
+	    //pc2.addIceCandidate(event.candidate);
+	    jsonData.desc = false;
+	    jsonData.ice = event.candidate;
+	    app.modules.node.sendRtcData(sendto_userid, jsonData);
 	    trace('Local ICE candidate: \n' + event.candidate.candidate);
 	  }
 	};
@@ -117,8 +164,8 @@ app.modules.p2p = (function(){
 	};
 
 	function onReceiveMessageCallback(event) {
-	  trace('Received Message');
-	  document.getElementById("dataChannelReceive").value = event.data;
+	  trace('Received Message: '+event.data);
+	  //document.getElementById("dataChannelReceive").value = event.data;
 	};
 
 	function onSendChannelStateChange() {
@@ -146,7 +193,11 @@ app.modules.p2p = (function(){
 
 	return {
 		init: createConnection,
-		close: closeDataChannels
+		close: closeDataChannels,
+		setRemoteData: setRemoteData,
+		addCandidate: addCandidate1,
+		sendData: sendData,
+		setRtcMsg: setRtcMsg
 	};
 	
 })();
