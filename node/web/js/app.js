@@ -15,6 +15,7 @@ var app = {
 	},
 	rtcCall: function(userid){
 		console.log(userid);
-		app.modules.p2p.init(userid, true);
+		//app.modules.p2p.init(userid, true);
+		app.modules.p2pCam.init(userid, true);
 	}
 };

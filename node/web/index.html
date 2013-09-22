@@ -12,11 +12,14 @@
     <div class="curr_user" style="width:200px;height: 20px;float:left;"></div>
     <input id="user_text" name="user_text_name" style="width:390px;"  placeholder="text goes here" value="" onkeydown="app.keyPress()" />
   </div>
+  <video id="remoteView"></video>
+  <video id="selfView"></video>
   <script src="js/libs/zepto.min.js"></script>
   <script src="http://localhost:5337/socket.io/socket.io.js"></script>
   <script src="js/app.js"></script>
   <script src="js/modules/node.js"></script>
   <script src="js/modules/p2p.js"></script>
+  <script src="js/modules/p2pCam.js"></script>
   <script src="js/views/userlist.js"></script>
   <script src="js/views/onboardmsg.js"></script>
 </body>
