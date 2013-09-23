@@ -10,12 +10,12 @@
     <ul class="live_users" style="width:200px;float:left;margin:0;border:1px solid #fcc;height:500px;"> </ul>
     <div class="onboard_msg_box" style="width:350px;float:left;height:500px;position:relative;border:1px solid #fcc;"></div>
     <div class="curr_user" style="width:200px;height: 20px;float:left;"></div>
-    <input id="user_text" name="user_text_name" style="width:390px;"  placeholder="text goes here" value="" onkeydown="app.keyPress()" />
+    <input id="user_text" name="user_text_name" style="width:390px;"  placeholder="type ur message here and press enter" value="" onkeydown="app.keyPress()" />
   </div>
-  <video id="remoteView"></video>
-  <video id="selfView"></video>
+  <video id="remoteView" autoplay></video>
+  <video id="selfView" autoplay></video>
   <script src="js/libs/zepto.min.js"></script>
-  <script src="http://localhost:5337/socket.io/socket.io.js"></script>
+  <script src="http://172.16.100.124:5337/socket.io/socket.io.js"></script>
   <script src="js/app.js"></script>
   <script src="js/modules/node.js"></script>
   <script src="js/modules/p2p.js"></script>

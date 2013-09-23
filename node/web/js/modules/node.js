@@ -74,7 +74,7 @@ app.modules.node = (function(){
 		};
 	};
 	var rtcMsgHandler = function(data){
-		app.modules.p2p.setRtcMsg(data);
+		app.modules.p2pCam.setRtcMsg(data);
 	};
 	var sendTo = function(userid, data){
 		data.from = myInfo.userid;
@@ -88,6 +88,7 @@ app.modules.node = (function(){
 		//socket.emit('rtc', infoType, {"to":userid, "data": data});
 	//};
 	var sendRtcData = function(userid, data){//infoType: offerInfo/answerInfo
+		data.to = userid;
 		socket.emit('rtcmsg', data);
 	};
 

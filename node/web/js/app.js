@@ -2,7 +2,7 @@ var app = {
 	modules:{},
 	views:{},
 	init: function(){
-		app.modules.node.init('http://localhost:5337');
+		app.modules.node.init('http://172.16.100.124:5337');
 	},
 	keyPress: function(e){
 		if (!e) e = window.event;
