@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>WebRTC POC</title>
+   <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+   <p>If you are initiating the chat then click on <b>Start</b> button and share the generated offer and candidate details with your peer. Ask peer to share generated offer and candidate details from his/her window after joining which you need to fill on your answer panel and click join.</p>
+   <p>If you have been shared with offer and candidate details then fill those on right side panel (answer) and click <b>Join</b>. Then share generated offer and candidate details with initiator.</p>
+   <div class="connect-panel">
+      <div class="offer-panel">
+         <h2>Offer Details</h2>
+         <textarea id="offer-field" class="offer" readonly></textarea>
+         <b>Candidate</b>
+         <textarea id="offer-cand-field" class="offer-cand" readonly></textarea>
+         <button id="start">Start</button>
+      </div>
+      <div class="answer-panel">
+         <h2>Answer</h2>
+         <textarea id="answer-field" class="answer"></textarea>
+         <b>Candidate</b>
+         <textarea id="answer-cand-field" class="answer-cand"></textarea>
+         <button id="join">Join</button>
+      </div>
+   </div>
+   <div class="chat-panel">
+      <div class="chat" id="chat"></div>
+      <input id="chat-field" class="chat-field" disabled /><br /><br />
+      <button id="send" disabled>send</button>
+   </div>
+   <script src="client.js"></script>
+</body>
+</html>
