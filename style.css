@@ -1,0 +1,53 @@
+.connect-panel {
+  display: flex;
+}
+
+.connect-panel > .offer-panel, .connect-panel > .answer-panel {
+  flex: 1;
+}
+
+textarea.offer, textarea.answer {
+  width: 90%;
+  height: 110px;
+  resize: none;
+}
+
+textarea.offer-cand, textarea.answer-cand {
+  width: 90%;
+  height: 30px;
+  resize: none;
+}
+
+.chat-panel > .chat {
+  margin: 30px 0 10px 0;
+  padding: 5px;
+  min-height: 200px;
+  background-color: antiquewhite;
+}
+
+.chat-field {
+  width: 100%;
+  resize: none;
+}
+
+button {
+  background-color: #008CBA; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+button:disabled {
+  background-color: #e7e7e7; color: #9E9E9E;
+}
+
+.success-button {
+  background-color: #4CAF50;
+}
+.danger-button {
+  background-color: #f44336;
+}
