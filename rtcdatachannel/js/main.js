@@ -45,7 +45,7 @@ function createConnection() {
   pc2.onicecandidate = iceCallback2;
   pc2.ondatachannel = receiveChannelCallback;
 
-  pc1.createOffer(gotDescription1);
+  pc1.createOffer(gotDescription1, error => console.log('error pc1', error));
   trace('after pc1 createOffer');
   startButton.disabled = true;
   closeButton.disabled = false;
@@ -81,9 +81,10 @@ function gotDescription1(desc) {
   pc1.setLocalDescription(desc);
   //trace('Offer from pc1 \n' + desc.sdp);
   trace('Offer from pc1');
+  
   pc2.setRemoteDescription(desc);
   trace('after pc2 setRemoteDescription');
-  pc2.createAnswer(gotDescription2);
+  pc2.createAnswer(gotDescription2, error => console.log('error pc2', error));
   trace('after pc2 createAnswer');
 }
 
