@@ -10,7 +10,7 @@ const chatField = document.querySelector('#chat-field');
 const send = document.querySelector('#send');
 
 const configuration = { iceServers: [{ "url": "stun:stun.1.google.com:19302" }] }; 
-let pc = new webkitRTCPeerConnection(configuration, {optional: [{ RtpDataChannels: true }]});;
+let pc = new webkitRTCPeerConnection(configuration, {optional: [{}]});;
 let sendChannel = null;
 let receiveChannel = null;
 let whoiam = null;
